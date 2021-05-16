@@ -3,19 +3,23 @@ package project1;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSlider;
 import javax.swing.SwingUtilities;
 
 public class Graph extends JPanel {
@@ -227,8 +231,15 @@ public class Graph extends JPanel {
 		
 		DecimalFormat df = new DecimalFormat("##.###");
 		
-		JButton precisionLabel = new JButton("Precision: " + df.format(precision) + "%");
+		JButton precisionLabel = new JButton("Precision: " + df.format(precision) + "%  ");
 		JButton accuracyLabel = new JButton("Accuracy: " + df.format(accuracy) + "%");
+		
+		// other components
+		JLabel valueLabel = new JLabel("Choose the majority value");
+		
+		JSlider valueSlider = new JSlider(JSlider.HORIZONTAL, 2, 25, 5);
+		
+		JButton runBtn = new JButton("Run Test");
 
         // Feel free to change the size of the panel
         mainPanel.setPreferredSize(new Dimension(700, 600));
@@ -236,15 +247,42 @@ public class Graph extends JPanel {
         /* creating the frame */
         JFrame frame = new JFrame("CS 112 Lab Part 3");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setLayout(new FlowLayout());
-        frame.getContentPane().add(mainPanel);
+        frame.setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
         
+        frame.getContentPane().add(mainPanel);
+       
+        precisionLabel.setAlignmentX(CENTER_ALIGNMENT);
         frame.getContentPane().add(precisionLabel);
+        
+        accuracyLabel.setAlignmentX(CENTER_ALIGNMENT);
         frame.getContentPane().add(accuracyLabel);
+        
+        valueLabel.setAlignmentX(CENTER_ALIGNMENT);
+        frame.getContentPane().add(valueLabel);
+        
+        valueSlider.setMajorTickSpacing(5);
+        valueSlider.setMinorTickSpacing(1);
+        valueSlider.setPaintTicks(true);
+        valueSlider.setSnapToTicks(true);
+        valueSlider.setAlignmentX(CENTER_ALIGNMENT);
+        frame.getContentPane().add(valueSlider);
+        
+        runBtn.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		selectionButtonPressed(valueSlider.getValue());
+        	}
+        });
+        runBtn.setAlignmentX(CENTER_ALIGNMENT);
+        frame.getContentPane().add(runBtn);
         
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
+    }
+    
+    public static void selectionButtonPressed(int sliderK) {
+    	sliderK = (sliderK * 2) + 1;
+    	createAndShowGui(sliderK, "titanic.csv");
     }
       
     /* The main method runs createAndShowGui*/
